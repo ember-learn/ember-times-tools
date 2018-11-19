@@ -1,26 +1,55 @@
-const Nightmare = require('nightmare')
-const nightmare = Nightmare({ show: true });
-const goodbitsPwd = process.env.GOODBITS_USER_PASSWORD.trim();
-console.log("start creating template...");
+/* HOW TO USE:
+- install casperjs globally
+- install slimejs globally,
+- install a Firefox version between 53 and 59 (most likely have to downgrade)
+- run `casperjs create-goodbits-template.js --engine=slimerjs --botemail=<botemail> --botpassword=<botpwd>` */
+var casper = require('casper').create();
 
-async function login() {
-  return nightmare
+var homePage = 'https://goodbits.io/';
+var signInPage = 'https://goodbits.io/users/sign_in';
+var signInButton = '#sign-in-button';
+var signInForm = '#new_user';
+var sidebar = '.sidebar-nav-items-wrapper';
+
+var botId = casper.cli.get('botemail');
+var botPwd = casper.cli.get('botpassword');
+
+casper.start(signInPage).thenEvaluate(function(botId, botPwd) {
+    var emailField = '#user_email';
+    var pwdField = '#user_password';
+    var signInFormSubmit = 'input[type="submit"]';
+    document.querySelector(emailField).setAttribute('value', botId);
+    document.querySelector(pwdField).click();
+    document.querySelector(pwdField).value = botPwd;
+    document.querySelector(signInFormSubmit).click();
+}, botId, botPwd);
+
+casper.then(function() {
+  this.waitForSelector(sidebar, function() {
+    this.wait(5000, function() {
+      console.log("done");
+    });
+  });
+});
+
+casper.run();
+
+  /* return nightmare
     .goto('https://goodbits.io/')
-    .click('#sign-in-button')
+/*    .click('#sign-in-button')
     .type('#user_email', process.env.GOODBITS_USER_EMAIL)
     .type('#user_password', goodbitsPwd)
     .type('input[type="submit"]', '\u000d')
-    //.click('input[type="submit"]')
+    .click('input[type="submit"]')
     .wait('.sidebar-nav-items-wrapper')
-    //.evaluate(() => document.querySelector('#r1-0 a.result__a').href)
-    //.end()
+    .evaluate(() => document.querySelector('#r1-0 a.result__a').href)
+    .end()
     .then(console.log)
     .catch(error => {
       console.error('Login failed:', error)
-    })
-}
+    }) */
 
-async function addNewTemplate() {
+/* async function addNewTemplate() {
   return nightmare
     .goto('https://goodbits.io/c/7430/emails')
     .wait('form[action="/c/7430/emails"]')
@@ -62,9 +91,11 @@ async function addContent() {
 }
 
 async function createTemplate() {
+  console.log("start login...");
   await login();
-  await addNewTemplate();
-  await addContent();
+  console.log("logged in");
+  // await addNewTemplate();
+//   await addContent();
 }
 
-createTemplate();
+createTemplate(); */
