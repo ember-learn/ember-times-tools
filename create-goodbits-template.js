@@ -4,12 +4,22 @@
 - install a Firefox version between 53 and 59 (most likely have to downgrade)
 - run `casperjs create-goodbits-template.js --engine=slimerjs --botemail=<botemail> --botpassword=<botpwd>` */
 var casper = require('casper').create();
+casper.options.viewportSize = {width: 1600, height: 950};
 
 var homePage = 'https://goodbits.io/';
 var signInPage = 'https://goodbits.io/users/sign_in';
+var emailPage = 'https://goodbits.io/c/7430/emails';
 var signInButton = '#sign-in-button';
 var signInForm = '#new_user';
 var sidebar = '.sidebar-nav-items-wrapper';
+var emailList = 'form[action="/c/7430/emails"]';
+var addNewEmailTemplate = '.button-new-issue';
+var editEmail = '.newsletter_emails_edit';
+var contentChoices = '.cb-tab-group_content-choices';
+var lastContentChoice = '.cb-tab-group_content-choices a:last-child';
+var contentItem = '.cb-actions-nav .cb-chip .cb-icon-title_and_text_sm';
+
+var addContent = '.js-add-content-btn';
 
 var botId = casper.cli.get('botemail');
 var botPwd = casper.cli.get('botpassword');
@@ -26,43 +36,66 @@ casper.start(signInPage).thenEvaluate(function(botId, botPwd) {
 
 casper.then(function() {
   this.waitForSelector(sidebar, function() {
-    this.wait(5000, function() {
-      console.log("done");
-    });
+    console.log("Logged in successfully ✨");
   });
+});
+
+casper.thenOpen(emailPage, function() {
+  this.waitForSelector(emailList, function() {
+    this.click(addNewEmailTemplate);
+  });
+});
+
+casper.waitForSelector(editEmail).thenEvaluate(function(addContent) {
+  document.querySelector(addContent).click();
+}, addContent);
+
+casper.waitForSelector(contentChoices).thenEvaluate(function(lastContentChoice) {
+  document.querySelector(lastContentChoice).click();
+}, lastContentChoice);
+
+casper.waitForSelector('.cb-inline-list').thenEvaluate(function() {
+  document.querySelector('.cb-inline-list a[href$="16"]').click();
+});
+
+casper.wait(3000, function() {
+  console.log("edit emails...");
+});
+
+casper.thenEvaluate(function() {
+  document.querySelector('.cb-nav__header-action[href$="edit"]').click();
+});
+
+casper.wait(10000, function() {
+  console.log("edit emails...");
+});
+
+casper.waitForSelector('.js-add-content-btn').thenEvaluate(function(contentItem) {
+  document.querySelector(contentItem).click();
+}, contentItem);
+
+casper.waitForSelector('.cb-details__container').thenEvaluate(function() {
+  document.querySelector('.js-fetch-link-data-field').setAttribute('value', 'my-link.com');
+  document.querySelector('trix-editor').value = 'my content';
+  document.querySelector('input[id$="-title"][id^="content-block"').setAttribute('value', 'MY TITLE');
+});
+
+casper.wait(3000, function() {
+  console.log("edited first content");
+});
+
+casper.thenEvaluate(function() {
+  document.querySelector('.cb-nav__header-action[href$="edit"]').click();
+});
+
+casper.wait(3000, function() {
+  console.log("saved first content");
 });
 
 casper.run();
 
-  /* return nightmare
-    .goto('https://goodbits.io/')
-/*    .click('#sign-in-button')
-    .type('#user_email', process.env.GOODBITS_USER_EMAIL)
-    .type('#user_password', goodbitsPwd)
-    .type('input[type="submit"]', '\u000d')
-    .click('input[type="submit"]')
-    .wait('.sidebar-nav-items-wrapper')
-    .evaluate(() => document.querySelector('#r1-0 a.result__a').href)
-    .end()
-    .then(console.log)
-    .catch(error => {
-      console.error('Login failed:', error)
-    }) */
 
-/* async function addNewTemplate() {
-  return nightmare
-    .goto('https://goodbits.io/c/7430/emails')
-    .wait('form[action="/c/7430/emails"]')
-    .click('.button-new-issue')
-    .wait('.newsletter_emails_edit')
-    .then(console.log)
-  //  .end()
-    .catch(error => {
-      console.error('Login failed:', error)
-    })
-}
-
-async function addContent() {
+/* async function addContent() {
   let elementIndex = 1;
   return nightmare
   .evaluate(elementIndex => {
