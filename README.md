@@ -7,11 +7,7 @@ Helps you to get the Goodbits newsletter for [The Ember Times 🐹](https://twit
 - Clone this repo
 ```
 git clone git@github.com:jessica-jordan/emberjs-times-tools.git
-```
-- Install the dependencies
-```
-yarn
-```
+``` 
 - Install [CasperJS](casperjs.org) globally
 ```
 yarn global add casperjs
