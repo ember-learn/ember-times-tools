@@ -6,7 +6,7 @@ Helps you to get the Goodbits newsletter for [The Ember Times 🐹](https://twit
 
 - Clone this repo
 ```
-git@github.com:jessica-jordan/emberjs-times-tools.git
+git clone git@github.com:jessica-jordan/emberjs-times-tools.git
 ```
 - Install the dependencies
 ```
