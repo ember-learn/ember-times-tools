@@ -10,12 +10,31 @@ casper.options.viewportSize = {width: 1600, height: 950};
 var blogPage = casper.cli.get('botblogurl');
 var blogFullContent = [];
 
+function domNodesDiff(fullList, excludedList) {
+  return Array.prototype.slice.call(fullList).filter((el) => Array.prototype.slice.call(excludedList).indexOf(el) < 0);
+}
+
+function getTextFromParagraphs(paragraphs) {
+  return [].map.call(paragraphs, function(para) {
+    return para.innerHTML;
+  }).join();
+}
+
 function collectContentFromBlog() {
   /* Collecting all paragraphs, titles and links from the blog post page */
   var contentCollection = [];
 
   var allHeaders = document.querySelectorAll('#toc-content .anchorable-toc');
   var numOfSections = allHeaders.length;
+
+  var introAndSectionParagraphs = document.querySelectorAll('#toc-content p');
+  var sectionParagraphs = document.querySelectorAll('#toc-content .anchorable-toc:nth-of-type(1) ~ p');
+  var introParagraphs = domNodesDiff(introAndSectionParagraphs, sectionParagraphs);
+  var editionNum = blogPage.match(/[0-9]*.html/)[0].match(/[0-9]*/)[0];;
+  var introTitle = `Issue #${editionNum}`;
+  var sectionSubTitle = `The Ember Times - Issue #${editionNum}`;
+
+  contentCollection.push({ sectionBody: introParagraphs, sectionTitle: introTitle, sectionSubTitle });
 
   for (var index = 0; index < numOfSections; index += 1) {
     var thisIndex = index + 1;
@@ -29,15 +48,12 @@ function collectContentFromBlog() {
         #toc-content .anchorable-toc:nth-of-type(${nextIndex}) ~ ul,
         #toc-content .anchorable-toc:nth-of-type(${nextIndex}) ~ .blog-row`
       );
-      var currentParagraphs = Array.prototype.slice.call(allParagraphs).filter((el) => Array.prototype.slice.call(secondParagraphs).indexOf(el) < 0);
+      var currentParagraphs = domNodesDiff(allParagraphs, secondParagraphs);
     } else {
       var currentParagraphs = allParagraphs;
     }
-    var sectionParts = [].map.call(currentParagraphs, function(para) {
-      return para.innerHTML;
-    });
 
-    var sectionBody = sectionParts.join();
+    var sectionBody = getTextFromParagraphs(currentParagraphs);
     var sectionTitle = document.querySelector(`#toc-content .anchorable-toc:nth-of-type(${thisIndex})`).textContent;
     var sectionLink = document.querySelector(`#toc-content .anchorable-toc:nth-of-type(${thisIndex}) a:nth-child(2)`).href;
 
@@ -109,6 +125,7 @@ var lastContentChoice = '.cb-tab-group_content-choices a:last-child';
 var goBackToMainView = '.cb-nav__header-action[href$="edit"]';
 var contentWindow = '.cb-details__container';
 var contentTitle = 'input[id$="-title"][id^="content-block"]';
+var contentSubTitle = 'input[id$="-preheader"][id^="content-block"]';
 var contentMainLink = '.js-fetch-link-data-field';
 var contentBody = 'trix-editor';
 var contentChoices = '.cb-tab-group_content-choices';
@@ -143,14 +160,47 @@ function createTemplate() {
     });
   });
 
+  var introContent = blogFullContent.shift();
+  addIntroBlock(casper, introContent);
+
   // routine for block adding here...
-  blogFullContent.map(function(content, index) {
+  /* blogFullContent.map(function(content, index) {
     addContentBlockRoutine(casper, content, index);
-  });
+  }); */
 
   casper.waitForSelector(editEmail, function() {
     console.log("saved content");
   });
+
+  function addIntroBlock(casper, content) {
+    /* Start Adding Content Block */
+    var introItem = document.querySelector('.js-cb-sortable li[data-position="0"] a');
+
+    casper.then(function() {
+      this.wait(5000, function() {
+        console.log("Adding intro, using selector " + introItem);
+      });
+    });
+
+    casper.waitForSelector(addContent).thenEvaluate(function(contentItemSelector) {
+      document.querySelector(contentItemSelector).click();
+    }, introItem);
+
+    casper.waitForSelector(contentWindow).thenEvaluate(function(contentSubTitle, contentBody, contentTitle, content) {
+      document.querySelector(contentTitle).setAttribute('value', content.sectionTitle); /* works */
+      document.querySelector(contentBody).value = content.sectionBody;
+      document.querySelector(contentSubTitle).setAttribute('value', content.sectionLink);
+    }, contentSubTitle, contentBody, contentTitle, content);
+
+    casper.wait(3000, function() {
+      console.log("Added intro. ✨");
+    });
+
+    casper.waitForSelector(goBackToMainView).thenEvaluate(function(goBack) {
+      document.querySelector(goBack).click();
+    }, goBackToMainView);
+    /* Stop Adding Intro */
+  }
 
   function addContentBlockRoutine(casper, content, iteration) {
     /* Start Adding Content Block */
