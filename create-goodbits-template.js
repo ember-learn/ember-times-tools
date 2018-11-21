@@ -19,7 +19,7 @@ function collectContentFromBlog(pageUrl) {
   function getTextFromParagraphs(paragraphs) {
     return [].map.call(paragraphs, function(para) {
       return para.outerHTML;
-    }).join();
+    }).join("");
   }
 
   /* Collecting all paragraphs, titles and links from the blog post page */
@@ -30,7 +30,11 @@ function collectContentFromBlog(pageUrl) {
 
   /* Adding Intro Content */
   var introAndSectionParagraphs = document.querySelectorAll('#toc-content p');
-  var sectionParagraphs = document.querySelectorAll('#toc-content .anchorable-toc:nth-of-type(1) ~ p');
+  var sectionParagraphs = document.querySelectorAll(
+    `#toc-content .anchorable-toc:nth-of-type(1) ~ p,
+    #toc-content .anchorable-toc:nth-of-type(1) ~ ul,
+    #toc-content .anchorable-toc:nth-of-type(1) ~ .blog-row`
+  );
   var introParagraphs = domNodesDiff(introAndSectionParagraphs, sectionParagraphs);
   var editionNum = pageUrl.match(/[0-9]*.html/)[0].match(/[0-9]*/)[0];
   var introTitle = `Issue #${editionNum}`;
@@ -70,22 +74,24 @@ function getContent() {
   /* CONTENT COLLECTION FROM BLOG POST */
 
   casper.start(blogPage).thenEvaluate(function() {
-    console.log("visiting " + blogPage + "...");
+    console.log("/// Content Collection ///////////////////////////////////");
+    console.log("Visiting " + blogPage + "...");
   });
 
-  casper.wait(5000, function() {
-    console.log("preparing content collection...");
+  casper.wait(1000, function() {
+    console.log("Starting content collection...");
   });
 
   casper.then(function() {
     // aggregate results from the post
     blogFullContent = this.evaluate(collectContentFromBlog, this.cli.get('botblogurl'));
-    console.log("collected content: " + blogFullContent.length + " sections to copy.");
+    console.log("Collected text content from " + blogFullContent.length + " sections to copy.");
   });
 
   casper.then(function() {
     this.wait(2000, function() {
       console.log("Ready for template creation ✨");
+      console.log("/// Goodbitsing ///////////////////////////////////");
     });
   });
 }
@@ -121,6 +127,7 @@ var botId = casper.cli.get('botemail');
 var botPwd = casper.cli.get('botpassword');
 
 function createTemplate() {
+  // signin to Goodbits
   casper.start(signInPage).thenEvaluate(function(botId, botPwd) {
       var emailField = '#user_email';
       var pwdField = '#user_password';
@@ -131,30 +138,35 @@ function createTemplate() {
       document.querySelector(signInFormSubmit).click();
   }, botId, botPwd);
 
+  // wait for main view to load
   casper.then(function() {
     this.waitForSelector(sidebar, function() {
       console.log("Logged in successfully ✨");
     });
   });
 
+  // go to emails and create a new empty template
   casper.thenOpen(emailPage, function() {
     this.waitForSelector(emailList, function() {
       this.click(addNewEmailTemplate);
     });
   });
 
+  // add the intro section
   var introContent = blogFullContent.shift();
   addIntroBlock(casper, introContent);
 
-  // routine for block adding here...
-  blogFullContent.map(function(content, index) {
+  // add all other sections
+  /* blogFullContent.map(function(content, index) {
     addContentBlockRoutine(casper, content, index);
-  });
+  }); */
 
+  // wrapping up
   casper.waitForSelector(editEmail, function() {
     console.log("beep bop 🤖🐹...");
   });
 
+  /* Sub Routines */
   function addIntroBlock(casper, content) {
     /* Start Adding Content Block */
     casper.then(function() {
@@ -199,7 +211,7 @@ function createTemplate() {
 
     casper.then(function() {
       this.wait(2000, function() {
-        console.log("Editing content (" + iteration + "/" + blogFullContent.length + ")");
+        console.log("Editing content (" + parseInt(iteration + 1) + "/" + blogFullContent.length + ")");
       });
     });
 
@@ -220,7 +232,7 @@ function createTemplate() {
     }, contentMainLink, contentBody, contentTitle, content);
 
     casper.wait(3000, function() {
-      console.log("Finished editing content (" + iteration + "/" + blogFullContent.length + ")");
+      console.log("Finished editing content (" + parseInt(iteration + 1) + "/" + blogFullContent.length + ")");
     });
 
     casper.waitForSelector(goBackToMainView).thenEvaluate(function(goBack) {
@@ -234,12 +246,9 @@ getContent();
 
 casper.then(function() {
   createTemplate();
-});
-
-casper.then(function() {
   /* Finish the editing routine */
   this.wait(2000, function() {
-    console.log("The template is now ready for your review at https://goodbits.io/c/7430/emails");
+    console.log("✨✨✨ The template is now ready for your review at https://goodbits.io/c/7430/emails ✨");
     console.log("If you had any issues running the script, feel free to report those or send bug fixes to https://github.com/jessica-jordan/emberjs-times-tools");
     console.log("Thank you for helping with The Ember Times today and see you again another time! 💖");
   });
