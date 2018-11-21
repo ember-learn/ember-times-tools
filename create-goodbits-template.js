@@ -29,7 +29,7 @@ function collectContentFromBlog(pageUrl) {
   var numOfSections = allHeaders.length;
 
   /* Adding Intro Content */
-  var introAndSectionParagraphs = document.querySelectorAll('#toc-content p');
+  var introAndSectionParagraphs = document.querySelectorAll('#toc-content > p');
   var sectionParagraphs = document.querySelectorAll(
     `#toc-content .anchorable-toc:nth-of-type(1) ~ p,
     #toc-content .anchorable-toc:nth-of-type(1) ~ ul,
@@ -157,9 +157,9 @@ function createTemplate() {
   addIntroBlock(casper, introContent);
 
   // add all other sections
-  /* blogFullContent.map(function(content, index) {
+  blogFullContent.map(function(content, index) {
     addContentBlockRoutine(casper, content, index);
-  }); */
+  });
 
   // wrapping up
   casper.waitForSelector(editEmail, function() {
