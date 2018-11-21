@@ -2,7 +2,8 @@
 - install casperjs globally
 - install slimejs globally,
 - install a Firefox version between 53 and 59 (most likely have to downgrade)
-- run `casperjs create-goodbits-template.js --engine=slimerjs --botemail=<botemail> --botpassword=<botpwd>` --botblogurl="https://www.emberjs.com/blog/2018/11/16/the-ember-times-issue-73.html" */
+- run `casperjs create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword="$GOODBITS_USER_PASSWORD" --engine="slimerjs" --botblogurl="https://www.emberjs.com/blog/2018/11/16/the-ember-times-issue-73.html
+- use the `--debug=true` for development */
 var casper = require('casper').create();
 casper.options.viewportSize = {width: 1600, height: 950};
 
@@ -69,7 +70,7 @@ function getContent() {
   });
 
   casper.then(function() {
-    console.log(blogFullContent.length);
+    console.log("Collected " + blogFullContent.length + " sections for the newsletter...");
   });
 
   casper.then(function() {
@@ -113,15 +114,13 @@ var contentBody = 'trix-editor';
 var contentChoices = '.cb-tab-group_content-choices';
 
 function contentItem(num) {
-  return `.cb-actions-nav .cb-chip:nth-child(${num + 1}) .cb-icon-title_and_text_sm`;
+  return '.js-cb-sortable li[data-position="' + parseInt(num + 2) + '"] a';
 }
 
 var botId = casper.cli.get('botemail');
 var botPwd = casper.cli.get('botpassword');
 
 function createTemplate() {
-  console.log(blogFullContent);
-  console.log(blogFullContent.length);
   casper.start(signInPage).thenEvaluate(function(botId, botPwd) {
       var emailField = '#user_email';
       var pwdField = '#user_password';
@@ -167,19 +166,29 @@ function createTemplate() {
       document.querySelector('.cb-inline-list a[href$="16"]').click();
     });
 
-    casper.wait(3000, function() {
-      console.log("edit emails...");
+    casper.then(function() {
+      this.wait(2000, function() {
+        console.log("editing...");
+      });
     });
 
     casper.thenEvaluate(function(goBack) {
       document.querySelector(goBack).click();
     }, goBackToMainView);
 
-    casper.wait(10000, function() {
-      console.log("edit emails...");
+    casper.then(function() {
+      this.wait(2000, function() {
+        console.log("still editing..");
+      });
     });
 
     var contentItemSelector = contentItem(iteration);
+
+    casper.then(function() {
+      this.wait(2000, function() {
+        console.log("using selector " + contentItemSelector);
+      });
+    });
 
     casper.waitForSelector(addContent).thenEvaluate(function(contentItemSelector) {
       document.querySelector(contentItemSelector).click();
@@ -204,8 +213,8 @@ function createTemplate() {
 
 getContent();
 
-/* casper.then(function() {
+casper.then(function() {
   createTemplate();
-}); */
+});
 
 casper.run();
