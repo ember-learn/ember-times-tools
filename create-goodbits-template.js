@@ -2,7 +2,7 @@
 - install casperjs globally
 - install slimejs globally,
 - install a Firefox version between 53 and 59 (most likely have to downgrade)
-- run `casperjs create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword="$GOODBITS_USER_PASSWORD" --engine="slimerjs" --botblogurl="https://www.emberjs.com/blog/2018/11/16/the-ember-times-issue-73.html
+- run `casperjs create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword="$GOODBITS_USER_PASSWORD" --engine="slimerjs" --botblogurl="https://www.emberjs.com/blog/2018/11/16/the-ember-times-issue-73.html"
 - use the `--debug=true` for development */
 var casper = require('casper').create();
 casper.options.viewportSize = {width: 1600, height: 950};
@@ -10,31 +10,34 @@ casper.options.viewportSize = {width: 1600, height: 950};
 var blogPage = casper.cli.get('botblogurl');
 var blogFullContent = [];
 
-function domNodesDiff(fullList, excludedList) {
-  return Array.prototype.slice.call(fullList).filter((el) => Array.prototype.slice.call(excludedList).indexOf(el) < 0);
-}
+function collectContentFromBlog(pageUrl) {
+  /* Helper Utils */
+  function domNodesDiff(fullList, excludedList) {
+    return Array.prototype.slice.call(fullList).filter((el) => Array.prototype.slice.call(excludedList).indexOf(el) < 0);
+  }
 
-function getTextFromParagraphs(paragraphs) {
-  return [].map.call(paragraphs, function(para) {
-    return para.innerHTML;
-  }).join();
-}
+  function getTextFromParagraphs(paragraphs) {
+    return [].map.call(paragraphs, function(para) {
+      return para.outerHTML;
+    }).join();
+  }
 
-function collectContentFromBlog() {
   /* Collecting all paragraphs, titles and links from the blog post page */
   var contentCollection = [];
 
   var allHeaders = document.querySelectorAll('#toc-content .anchorable-toc');
   var numOfSections = allHeaders.length;
 
+  /* Adding Intro Content */
   var introAndSectionParagraphs = document.querySelectorAll('#toc-content p');
   var sectionParagraphs = document.querySelectorAll('#toc-content .anchorable-toc:nth-of-type(1) ~ p');
   var introParagraphs = domNodesDiff(introAndSectionParagraphs, sectionParagraphs);
-  var editionNum = blogPage.match(/[0-9]*.html/)[0].match(/[0-9]*/)[0];;
+  var editionNum = pageUrl.match(/[0-9]*.html/)[0].match(/[0-9]*/)[0];
   var introTitle = `Issue #${editionNum}`;
   var sectionSubTitle = `The Ember Times - Issue #${editionNum}`;
+  var introBody = getTextFromParagraphs(introParagraphs);
 
-  contentCollection.push({ sectionBody: introParagraphs, sectionTitle: introTitle, sectionSubTitle });
+  contentCollection.push({ sectionBody: introBody, sectionTitle: introTitle, sectionSubTitle });
 
   for (var index = 0; index < numOfSections; index += 1) {
     var thisIndex = index + 1;
@@ -76,29 +79,9 @@ function getContent() {
 
   casper.then(function() {
     // aggregate results from the post
-    blogFullContent = this.evaluate(collectContentFromBlog);
+    blogFullContent = this.evaluate(collectContentFromBlog, this.cli.get('botblogurl'));
+    console.log("collected content: " + blogFullContent.length + " sections to copy.");
   });
-
-  casper.then(function() {
-    this.wait(2000, function() {
-      console.log("results...");
-    });
-  });
-
-  casper.then(function() {
-    console.log("Collected " + blogFullContent.length + " sections for the newsletter...");
-  });
-
-  casper.then(function() {
-    this.wait(2000, function() {
-      console.log("collected content.");
-    });
-  });
-
-  casper.then(function() {
-    blogFullContent = this.evaluate(collectContentFromBlog);
-  });
-
 
   casper.then(function() {
     this.wait(2000, function() {
@@ -164,32 +147,30 @@ function createTemplate() {
   addIntroBlock(casper, introContent);
 
   // routine for block adding here...
-  /* blogFullContent.map(function(content, index) {
+  blogFullContent.map(function(content, index) {
     addContentBlockRoutine(casper, content, index);
-  }); */
+  });
 
   casper.waitForSelector(editEmail, function() {
-    console.log("saved content");
+    console.log("beep bop 🤖🐹...");
   });
 
   function addIntroBlock(casper, content) {
     /* Start Adding Content Block */
-    var introItem = document.querySelector('.js-cb-sortable li[data-position="0"] a');
-
     casper.then(function() {
       this.wait(5000, function() {
-        console.log("Adding intro, using selector " + introItem);
+        console.log("Adding intro....");
       });
     });
 
-    casper.waitForSelector(addContent).thenEvaluate(function(contentItemSelector) {
-      document.querySelector(contentItemSelector).click();
-    }, introItem);
+    casper.waitForSelector(addContent).thenEvaluate(function() {
+      document.querySelector('.js-cb-sortable li[data-position="0"] a').click();
+    });
 
     casper.waitForSelector(contentWindow).thenEvaluate(function(contentSubTitle, contentBody, contentTitle, content) {
       document.querySelector(contentTitle).setAttribute('value', content.sectionTitle); /* works */
       document.querySelector(contentBody).value = content.sectionBody;
-      document.querySelector(contentSubTitle).setAttribute('value', content.sectionLink);
+      document.querySelector(contentSubTitle).setAttribute('value', content.sectionSubTitle);
     }, contentSubTitle, contentBody, contentTitle, content);
 
     casper.wait(3000, function() {
@@ -218,7 +199,7 @@ function createTemplate() {
 
     casper.then(function() {
       this.wait(2000, function() {
-        console.log("editing...");
+        console.log("Editing content (" + iteration + "/" + blogFullContent.length + ")");
       });
     });
 
@@ -226,19 +207,7 @@ function createTemplate() {
       document.querySelector(goBack).click();
     }, goBackToMainView);
 
-    casper.then(function() {
-      this.wait(2000, function() {
-        console.log("still editing..");
-      });
-    });
-
     var contentItemSelector = contentItem(iteration);
-
-    casper.then(function() {
-      this.wait(2000, function() {
-        console.log("using selector " + contentItemSelector);
-      });
-    });
 
     casper.waitForSelector(addContent).thenEvaluate(function(contentItemSelector) {
       document.querySelector(contentItemSelector).click();
@@ -251,7 +220,7 @@ function createTemplate() {
     }, contentMainLink, contentBody, contentTitle, content);
 
     casper.wait(3000, function() {
-      console.log("edited first content");
+      console.log("Finished editing content (" + iteration + "/" + blogFullContent.length + ")");
     });
 
     casper.waitForSelector(goBackToMainView).thenEvaluate(function(goBack) {
@@ -265,6 +234,15 @@ getContent();
 
 casper.then(function() {
   createTemplate();
+});
+
+casper.then(function() {
+  /* Finish the editing routine */
+  this.wait(2000, function() {
+    console.log("The template is now ready for your review at https://goodbits.io/c/7430/emails");
+    console.log("If you had any issues running the script, feel free to report those or send bug fixes to https://github.com/jessica-jordan/emberjs-times-tools");
+    console.log("Thank you for helping with The Ember Times today and see you again another time! 💖");
+  });
 });
 
 casper.run();
