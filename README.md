@@ -28,7 +28,6 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 - use the `--debug=true` for development and debugging 💛
 - review 👀 and feel free to improve the template at [Goodbits](https://goodbits.io/c/7430/emails) - this tool isn't perfect, but tries its best to help with the mundane copy-pasta work ✍️
   - Drag "Social Links" to the bottom (below "#embertimes", above "Footer")
-  - Delete extra blank line at the end of each section
   - Readers' Questions 
       - Change to article
       - Delete broken image in text
