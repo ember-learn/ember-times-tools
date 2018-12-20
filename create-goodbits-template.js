@@ -211,6 +211,10 @@ async function addIntroBlock(page, content) {
 	await page.evaluate((contentSubTitle, contentBody, contentTitle, content) => {
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle); /* works */
 		document.querySelector(contentBody).value = content.sectionBody;
+		let trixEditor = document.querySelector(contentBody);
+		let lastDiv = trixEditor.querySelector('div:last-child');
+		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
 		document.querySelector(contentSubTitle).setAttribute('value', content.sectionSubTitle);
 	}, contentSubTitle, contentBody, contentTitle, content);
 
@@ -259,7 +263,11 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 	await page.waitForSelector(contentWindow);
 	await page.evaluate((contentMainLink, contentBody, contentTitle, content) => {
 		document.querySelector(contentMainLink).setAttribute('value', content.sectionLink);
-		document.querySelector(contentBody).value = content.sectionBody;
+		document.querySelector(contentBody).value = content.sectionBody
+		let trixEditor = document.querySelector(contentBody);
+		let lastDiv = trixEditor.querySelector('div:last-child');
+		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle);
 	}, contentMainLink, contentBody, contentTitle, content);
 
