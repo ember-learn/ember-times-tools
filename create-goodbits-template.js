@@ -4,7 +4,6 @@
 - npm install
 - run `node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword="$GOODBITS_USER_PASSWORD" --botblogurl="https://www.emberjs.com/blog/2018/11/16/the-ember-times-issue-73.html"
 - use the `--debug=true` for development */
-// let casper = require('casper').create();
 const puppeteer = require('puppeteer');
 const argv = require('yargs').argv
 
