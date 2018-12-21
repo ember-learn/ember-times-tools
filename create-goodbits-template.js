@@ -265,8 +265,10 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 		document.querySelector(contentBody).value = content.sectionBody
 		let trixEditor = document.querySelector(contentBody);
 		let lastDiv = trixEditor.querySelector('div:last-child');
-		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
-		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		if( lastDiv ) {
+			const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+			lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		}
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle);
 	}, contentMainLink, contentBody, contentTitle, content);
 
