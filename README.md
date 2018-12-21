@@ -33,4 +33,7 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
       - Delete broken image in text
       - Add line break before "Submit your own", should be new paragraph
       - Upload image https://emberjs.com/images/tomsters/officehours-42680347.png
-- schedule the newsletter and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
+  - Replace any double curlies
+    - Opening double curlies `{{` should be `{{ opening_double_curly() }}` in Goodbits
+    - Closing double curlies `}}` should be `{{ closing_double_curly() }}` in Goodbits
+- schedule the newsletter for 2pm PST (https://everytimezone.com/#2018-12-21,600,b8jj) and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
