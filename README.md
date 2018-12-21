@@ -31,5 +31,6 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
   - Readers' Questions 
       - Change to article
       - Delete broken image in text
+      - Add line break before "Submit your own", should be new paragraph
       - Upload image https://emberjs.com/images/tomsters/officehours-42680347.png
 - schedule the newsletter and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
