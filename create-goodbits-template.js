@@ -107,9 +107,6 @@ async function getContent() {
 }
 
 
-
-
-
 /* ------------------------------------------------------------------------------ */
 
 /* GOODBITS TEMPLATING */
@@ -131,6 +128,8 @@ let contentSubTitle = 'input[id$="-preheader"][id^="content-block"]';
 let contentMainLink = '.js-fetch-link-data-field';
 let contentBody = 'trix-editor';
 let contentChoices = '.cb-tab-group_content-choices';
+let openDblCurliesRpl = '{{ opening_double_curly() }}'
+let closeDblCurliesRpl = '{{ closing_double_curly() }}'
 
 let contentItem = (num) => {
 	return `.js-cb-sortable li[data-position="${parseInt(num + 2)}"] a`;
@@ -207,15 +206,22 @@ async function addIntroBlock(page, content) {
 	});
 
 	await page.waitForSelector(contentWindow);
-	await page.evaluate((contentSubTitle, contentBody, contentTitle, content) => {
+	await page.evaluate((contentSubTitle, contentBody, contentTitle, content, openDblCurliesRpl, closeDblCurliesRpl) => {
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle); /* works */
+		let curlyRegex = /({{)((?:\s*[^\s{}]+\s*|{\s*[^\s{}]+\s*}|[&#^\/>!]\s*[^\s{}]+\s*))(}})/g;
+		
+		document.querySelector(contentMainLink).setAttribute('value', content.sectionLink);
+		content.sectionBody = content.sectionBody.replace(curlyRegex, `${openDblCurliesRpl}$2${closeDblCurliesRpl}`);
 		document.querySelector(contentBody).value = content.sectionBody;
+		
 		let trixEditor = document.querySelector(contentBody);
 		let lastDiv = trixEditor.querySelector('div:last-child');
-		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
-		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		if (lastDiv) {
+			const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+			lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		}
 		document.querySelector(contentSubTitle).setAttribute('value', content.sectionSubTitle);
-	}, contentSubTitle, contentBody, contentTitle, content);
+	}, contentSubTitle, contentBody, contentTitle, content, openDblCurliesRpl, closeDblCurliesRpl);
 
 	await page.waitFor(3000).then(() => {
 		console.log("Added intro. ✨");
@@ -260,15 +266,21 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 	}, contentItemSelector);
 
 	await page.waitForSelector(contentWindow);
-	await page.evaluate((contentMainLink, contentBody, contentTitle, content) => {
+	await page.evaluate((contentMainLink, contentBody, contentTitle, content, openDblCurliesRpl, closeDblCurliesRpl) => {
+		let curlyRegex = /({{)((?:\s*[^\s{}]+\s*|{\s*[^\s{}]+\s*}|[&#^\/>!]\s*[^\s{}]+\s*))(}})/g;
+		
 		document.querySelector(contentMainLink).setAttribute('value', content.sectionLink);
+		content.sectionBody = content.sectionBody.replace(curlyRegex, `${openDblCurliesRpl}$2${closeDblCurliesRpl}`);
 		document.querySelector(contentBody).value = content.sectionBody
+		
 		let trixEditor = document.querySelector(contentBody);
 		let lastDiv = trixEditor.querySelector('div:last-child');
-		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
-		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		if (lastDiv) {
+			const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+			lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		}
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle);
-	}, contentMainLink, contentBody, contentTitle, content);
+	}, contentMainLink, contentBody, contentTitle, content, openDblCurliesRpl, closeDblCurliesRpl);
 
 	await page.waitFor(3000).then(() => {
 		console.log(`Finished editing content (${parseInt(iteration + 1)}/${blogFullContent.length})`);
