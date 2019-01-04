@@ -7,21 +7,25 @@
 const puppeteer = require('puppeteer');
 const argv = require('yargs').argv
 
-async function goodbits() {
-	let content = await getContent();
-	await createTemplate(content);
+puppeteer.launch({
+	devtools: argv.debug,
+	defaultViewport: {
+		width: 1600,
+		height: 950
+	}
+}).then((browser) => {
+	goodbits(browser);
+});
+
+async function goodbits(browserInstance) {
+	let content = await getContent(browserInstance);
+	await createTemplate(content, browserInstance);
 }
 
-async function getContent() {
+async function getContent(browser) {
 	let blogPage = argv.botblogurl
 	/* CONTENT COLLECTION FROM BLOG POST */
-	const browser = await puppeteer.launch({
-		devtools: argv.debug,
-		defaultViewport: {
-			width: 1600,
-			height: 950
-		}
-	});
+
 	const page = await browser.newPage();
 	await page.goto(blogPage).then(() => {
 		console.log(`Visiting ${blogPage} ...`);
@@ -139,16 +143,10 @@ let contentItem = (num) => {
 let botId = argv.botemail;
 let botPwd = argv.botpassword;
 
-async function createTemplate(blogFullContent) {
+async function createTemplate(blogFullContent, browser) {
 	console.log(`Collected text content from ${blogFullContent.length} sections to copy.`);
 	// signin to Goodbits
-	const browser = await puppeteer.launch({
-		devtools: argv.debug,
-		defaultViewport: {
-			width: 1600,
-			height: 950
-		}
-	});
+
 
 	let page = await browser.newPage();
 	await page.goto(signInPage).then(() => {
@@ -286,4 +284,3 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 	}, goBackToMainView);
 	/* Stop Adding Content Block */
 }
-goodbits();
