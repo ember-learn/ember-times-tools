@@ -7,21 +7,25 @@
 const puppeteer = require('puppeteer');
 const argv = require('yargs').argv
 
-async function goodbits() {
-	let content = await getContent();
-	await createTemplate(content);
+puppeteer.launch({
+	devtools: argv.debug,
+	defaultViewport: {
+		width: 1600,
+		height: 950
+	}
+}).then((browser) => {
+	goodbits(browser);
+});
+
+async function goodbits(browserInstance) {
+	let content = await getContent(browserInstance);
+	await createTemplate(content, browserInstance);
 }
 
-async function getContent() {
+async function getContent(browser) {
 	let blogPage = argv.botblogurl
 	/* CONTENT COLLECTION FROM BLOG POST */
-	const browser = await puppeteer.launch({
-		devtools: argv.debug,
-		defaultViewport: {
-			width: 1600,
-			height: 950
-		}
-	});
+
 	const page = await browser.newPage();
 	await page.goto(blogPage).then(() => {
 		console.log(`Visiting ${blogPage} ...`);
@@ -139,16 +143,10 @@ let contentItem = (num) => {
 let botId = argv.botemail;
 let botPwd = argv.botpassword;
 
-async function createTemplate(blogFullContent) {
+async function createTemplate(blogFullContent, browser) {
 	console.log(`Collected text content from ${blogFullContent.length} sections to copy.`);
 	// signin to Goodbits
-	const browser = await puppeteer.launch({
-		devtools: argv.debug,
-		defaultViewport: {
-			width: 1600,
-			height: 950
-		}
-	});
+
 
 	let page = await browser.newPage();
 	await page.goto(signInPage).then(() => {
@@ -209,11 +207,14 @@ async function addIntroBlock(page, content) {
 	await page.waitForSelector(contentWindow);
 	await page.evaluate((contentSubTitle, contentBody, contentTitle, content) => {
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle); /* works */
-		document.querySelector(contentBody).value = content.sectionBody;
-		let trixEditor = document.querySelector(contentBody);
-		let lastDiv = trixEditor.querySelector('div:last-child');
-		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
-		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		let editor = document.querySelector(contentBody);
+		editor.value = content.sectionBody;
+		let lastDiv = editor.querySelector('div:last-child');
+		/* the last element in a content editor window might but doesn't need to be a div, but might also be an ul, etc. */
+		if (lastDiv) {
+		  const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+		  lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+	  }
 		document.querySelector(contentSubTitle).setAttribute('value', content.sectionSubTitle);
 	}, contentSubTitle, contentBody, contentTitle, content);
 
@@ -262,11 +263,14 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 	await page.waitForSelector(contentWindow);
 	await page.evaluate((contentMainLink, contentBody, contentTitle, content) => {
 		document.querySelector(contentMainLink).setAttribute('value', content.sectionLink);
-		document.querySelector(contentBody).value = content.sectionBody
-		let trixEditor = document.querySelector(contentBody);
-		let lastDiv = trixEditor.querySelector('div:last-child');
-		const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
-		lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+		let editor = document.querySelector(contentBody);
+		editor.value = content.sectionBody
+		let lastDiv = editor.querySelector('div:last-child');
+		/* only remove the whitespace if the last paragraph in the editor window is a div (and not e.g. an ul) */
+		if (lastDiv) {
+		  const regex = /(\s*<br\s*\/?\s*>\s*)*\s*$/g;
+		  lastDiv.innerHTML = lastDiv.innerHTML.replace(regex, '');
+	  }
 		document.querySelector(contentTitle).setAttribute('value', content.sectionTitle);
 	}, contentMainLink, contentBody, contentTitle, content);
 
@@ -280,4 +284,3 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 	}, goBackToMainView);
 	/* Stop Adding Content Block */
 }
-goodbits();
