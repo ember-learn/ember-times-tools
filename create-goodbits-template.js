@@ -25,7 +25,6 @@ async function goodbits(browserInstance) {
 async function getContent(browser) {
 	let blogPage = argv.botblogurl
 	/* CONTENT COLLECTION FROM BLOG POST */
-
 	const page = await browser.newPage();
 	await page.goto(blogPage).then(() => {
 		console.log(`Visiting ${blogPage} ...`);
@@ -182,7 +181,39 @@ async function createTemplate(blogFullContent, browser) {
 	for (let content of blogFullContent) {
 		await addContentBlockRoutine(page, content, index, blogFullContent);
 		index += 1;
+		// if (index === 5) break;
 	}
+
+	await page.waitFor(1000).then(() => {
+		console.log('Drag "Social Links" to the bottom (below "#embertimes", above "Footer")  🤖...');
+	});
+	debugger;
+	let social = await page.$('.blank-list li[data-position="1"]');
+	let box = await social.boundingBox();
+	let boxCenterX = box.x + box.width / 2
+	let boxCenterY =  box.y + box.height / 2
+	await page.mouse.move(boxCenterX, boxCenterY);
+	await page.mouse.down();
+	let moveDown = ((index+1)*105);
+	let movePixel =  boxCenterY
+	while ( movePixel < moveDown ) {
+		//slowly move the mouse so that ui-sortable can pickup the events.
+		await page.waitFor(100);  
+		await page.mouse.move(0, movePixel +=5 );
+	}
+	await page.mouse.up();
+	debugger;
+
+	// Save for later....
+	// await page.evaluate((index) => {
+	// 	debugger;
+	// 	let dnd = $('.blank-list')
+	// 	let social = $('.blank-list li[data-position="1"]')
+	// 	let lastPos = $(`.blank-list li[data-position="${index+1}"]`);
+	// 	social.insertAfter(lastPos);
+	// 	dnd.trigger("sortupdate");
+	// }, index);
+
 	// wrapping up
 	await page.waitForSelector(editEmail).then(() => {
 		console.log("beep bop 🤖🐹...");
