@@ -181,13 +181,13 @@ async function createTemplate(blogFullContent, browser) {
 	for (let content of blogFullContent) {
 		await addContentBlockRoutine(page, content, index, blogFullContent);
 		index += 1;
-		// if (index === 5) break;
+		// if (index === 5) break; //for debugging Drang n Drop
 	}
 
 	await page.waitFor(1000).then(() => {
 		console.log('Drag "Social Links" to the bottom (below "#embertimes", above "Footer")  🤖...');
 	});
-	debugger;
+
 	let social = await page.$('.blank-list li[data-position="1"]');
 	let box = await social.boundingBox();
 	let boxCenterX = box.x + box.width / 2
@@ -202,7 +202,6 @@ async function createTemplate(blogFullContent, browser) {
 		await page.mouse.move(0, movePixel +=5 );
 	}
 	await page.mouse.up();
-	debugger;
 
 	// Save for later....
 	// await page.evaluate((index) => {
