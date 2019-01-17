@@ -36,4 +36,5 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
   - Replace any double curlies
     - Opening double curlies `{{` should be `{{ opening_double_curly() }}` in Goodbits
     - Closing double curlies `}}` should be `{{ closing_double_curly() }}` in Goodbits
+  - If there are buttons, delete in text and change to Content > Button in Goodbits (add manually)
 - schedule the newsletter for 2pm PST (https://everytimezone.com/#2018-12-21,600,b8jj) and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
