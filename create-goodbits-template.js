@@ -154,15 +154,21 @@ async function createTemplate(blogFullContent, browser) {
 	await page.goto(signInPage).then(() => {
 		console.log(`Visiting ${signInPage} ...`);
 	});
-	await page.evaluate((botId, botPwd) => {
-		let emailField = '#user_email';
-		let pwdField = '#user_password';
-		let signInFormSubmit = 'input[type="submit"]';
-		document.querySelector(emailField).setAttribute('value', botId);
-		document.querySelector(pwdField).click();
-		document.querySelector(pwdField).value = botPwd;
-		document.querySelector(signInFormSubmit).click();
-	}, botId, botPwd);
+	console.log(`botId: ${botId}`) // exists
+	console.log(`botPwd: ${botPwd}`) // exists
+	try {
+		await page.evaluate(async (botId, botPwd) => {
+			let emailField = '#user_email';
+			let pwdField = '#user_password';
+			let signInFormSubmit = 'input[type="submit"]';
+			console.log(`email field: ${emailField}`);
+			// how to debug here, can we "run" in any way. from the inspector, seems correct?
+			document.querySelector(emailField).setAttribute('value', botId);
+			document.querySelector(pwdField).click();
+			document.querySelector(pwdField).value = botPwd;
+			document.querySelector(signInFormSubmit).click();
+		}, botId, botPwd);
+	} catch (e) { console.log('in the catch')}
 
 	//wait for main view to load
 	await page.waitForSelector(sidebar).then(() => {
