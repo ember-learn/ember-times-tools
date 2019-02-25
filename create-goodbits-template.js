@@ -118,7 +118,7 @@ async function getContent(browser) {
 
 /* GOODBITS TEMPLATING */
 let homePage = 'https://goodbits.io/';
-let signInPage = 'https://goodbits.io/users/sign_in';
+let signInPage = 'https://goodbits.io/users/login';
 let emailPage = 'https://goodbits.io/c/7430/emails';
 let signInButton = '#sign-in-button';
 let signInForm = '#new_user';
