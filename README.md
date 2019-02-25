@@ -2,7 +2,7 @@
 
 Helps you to get the Goodbits newsletter for [The Ember Times 🐹](https://twitter.com/embertimes) ready on a Friday afternoon 🌇 or night 🌙
 
-## How To Use
+## Setup
 
 - Clone this repo
 ```
@@ -20,6 +20,9 @@ export GOODBITS_USER_PASSWORD="goodbits-bot-password"
 ```
 source ~/.bashrc
 ```
+
+## How to Use
+
 - get a hold of the latest blog post url, e.g. `https://www.emberjs.com/blog/2018/11/16/the-ember-times-issue-73.html`
 - finally run the script and pass in the url pointing to the latest blog post:
 ```
@@ -29,11 +32,13 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 - review 👀 and feel free to improve the template at [Goodbits](https://goodbits.io/c/7430/emails) - this tool isn't perfect, but tries its best to help with the mundane copy-pasta work ✍️
   - Drag "Social Links" to the bottom (below "#embertimes", above "Footer")
   - Readers' Questions 
-      - Change to article
+      - Change "Display as" dropdown to "Article" 
       - Delete broken image in text
       - Add line break before "Submit your own", should be new paragraph
       - Upload image https://emberjs.com/images/tomsters/officehours-42680347.png
   - Replace any double curlies
     - Opening double curlies `{{` should be `{{ opening_double_curly() }}` in Goodbits
     - Closing double curlies `}}` should be `{{ closing_double_curly() }}` in Goodbits
+  - If there are buttons, delete in text and change to Content > Button in Goodbits (add manually)
+  - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
 - schedule the newsletter for 2pm PST (https://everytimezone.com/#2018-12-21,600,b8jj) and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
