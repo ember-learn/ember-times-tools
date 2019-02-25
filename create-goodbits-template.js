@@ -117,7 +117,7 @@ async function getContent(browser) {
 
 /* GOODBITS TEMPLATING */
 let homePage = 'https://goodbits.io/';
-let signInPage = 'https://goodbits.io/users/sign_in';
+let signInPage = 'https://goodbits.io/users/login';
 let emailPage = 'https://goodbits.io/c/7430/emails';
 let signInButton = '#sign-in-button';
 let signInForm = '#new_user';
@@ -213,6 +213,49 @@ async function createTemplate(blogFullContent, browser) {
 	// 	dnd.trigger("sortupdate");
 	// }, index);
 
+
+	/*
+	Readers' Questions
+		Change to article
+		Delete broken image in text
+		Add line break before "Submit your own", should be new paragraph
+		Upload image emberjs.com/images/tomsters/officehours-42680347.png
+	*/
+	await page.waitFor(2000);
+	await page.evaluate(() => {
+		$('.js-cb-sortable li a:contains("Readers\' Questions")')[0].click();
+	});
+	await page.waitFor(2000);
+
+	await page.evaluate((contentBody) => {
+		document.querySelector('.js-component-selector button').click();
+		
+		// Change to article
+		document.querySelector('ul.dropdown-menu a[data-component-id="6"]').click();
+
+		// Delete broken image in text
+		let editor = document.querySelector(contentBody);
+		// let editorImage = document.querySelector(`${contentBody} figure`);
+		// editorImage.parentNode.removeChild(editorImage);
+
+		// debugger;
+		// Add line break before "Submit your own", should be new paragraph
+		let lastDiv = editor.querySelector('div:last-child');
+		lastDiv.innerHTML = `<br>${lastDiv.innerHTML}`;
+	}, contentBody);
+
+	await page.waitFor(3000).then(() => {
+		console.log(`Finished Changing Readers' Questions`);
+	});
+
+	const input = await page.$('input[type="file"]')
+	await input.uploadFile('./officehours-42680347.png')
+
+	await page.waitForSelector(goBackToMainView);
+	await page.evaluate(goBack => {
+		document.querySelector(goBack).click();
+	}, goBackToMainView);
+
 	// wrapping up
 	await page.waitForSelector(editEmail).then(() => {
 		console.log("beep bop 🤖🐹...");
@@ -298,7 +341,10 @@ async function addContentBlockRoutine(page, content, iteration, blogFullContent)
 	await page.waitForSelector(contentWindow);
 	await page.evaluate((contentMainLink, contentBody, contentTitle, content, openDblCurliesRpl, closeDblCurliesRpl) => {
 		let curlyRegex = /({{)((?:\s*[^\s{}]+\s*|{\s*[^\s{}]+\s*}|[&#^\/>!]\s*[^\s{}]+\s*))(}})/g;
+		let imgsRegex = /<img[^>]*?src\s*=\s*[""']?([^'"" >]+?)[ '""][^>]*?>/g;
+
 		content.sectionBody = content.sectionBody.replace(curlyRegex, `${openDblCurliesRpl}$2${closeDblCurliesRpl}`);
+		content.sectionBody = content.sectionBody.replace(imgsRegex, '');
 
 		document.querySelector(contentMainLink).setAttribute('value', content.sectionLink);
 
