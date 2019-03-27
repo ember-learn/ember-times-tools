@@ -181,46 +181,8 @@ async function createTemplate(blogFullContent, browser) {
 	for (let content of blogFullContent) {
 		await addContentBlockRoutine(page, content, index, blogFullContent);
 		index += 1;
-		// if (index === 5) break; //for debugging Drang n Drop
 	}
 
-	await page.waitFor(1000).then(() => {
-		console.log('Drag "Social Links" to the bottom (below "#embertimes", above "Footer")  🤖...');
-	});
-
-	let social = await page.$('.blank-list li[data-position="1"]');
-	let box = await social.boundingBox();
-	let boxCenterX = box.x + box.width / 2
-	let boxCenterY =  box.y + box.height / 2
-	await page.mouse.move(boxCenterX, boxCenterY);
-	await page.mouse.down();
-	let moveDown = ((index+1)*105);
-	let movePixel =  boxCenterY
-	while ( movePixel < moveDown ) {
-		//slowly move the mouse so that ui-sortable can pickup the events.
-		await page.waitFor(100);  
-		await page.mouse.move(0, movePixel +=5 );
-	}
-	await page.mouse.up();
-
-	// Save for later....
-	// await page.evaluate((index) => {
-	// 	debugger;
-	// 	let dnd = $('.blank-list')
-	// 	let social = $('.blank-list li[data-position="1"]')
-	// 	let lastPos = $(`.blank-list li[data-position="${index+1}"]`);
-	// 	social.insertAfter(lastPos);
-	// 	dnd.trigger("sortupdate");
-	// }, index);
-
-
-	/*
-	Readers' Questions
-		Change to article
-		Delete broken image in text
-		Add line break before "Submit your own", should be new paragraph
-		Upload image emberjs.com/images/tomsters/officehours-42680347.png
-	*/
 	await page.waitFor(2000);
 	await page.evaluate(() => {
 		$('.js-cb-sortable li a:contains("Readers\' Questions")')[0].click();
