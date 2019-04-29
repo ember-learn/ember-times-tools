@@ -48,7 +48,7 @@ async function getContent(browser) {
 
 		getParagraphs = (index) => {
 			return document.querySelectorAll(
-				`#toc-content .anchorable-toc:nth-of-type(${index}) ~ p,
+        `#toc-content > p,
 				#toc-content .anchorable-toc:nth-of-type(${index}) ~ ul,
 				#toc-content .anchorable-toc:nth-of-type(${index}) ~ .blog-row`
 			);
@@ -62,9 +62,9 @@ async function getContent(browser) {
 		let numOfSections = allHeaders.length;
 
 		/* Adding Intro Content */
-		let introAndSectionParagraphs = document.querySelectorAll('#toc-content > p');
-		let sectionParagraphs = document.querySelectorAll(
-			`#toc-content .anchorable-toc:nth-of-type(1) ~ p,
+		let introAndSectionParagraphs = document.querySelectorAll('#toc-content > p'); 
+		let sectionParagraphs = document.querySelectorAll( // < get first 2 p tags before hr
+			`#toc-content h2:nth-of-type(1) ~ p,
 			#toc-content .anchorable-toc:nth-of-type(1) ~ ul,
 			#toc-content .anchorable-toc:nth-of-type(1) ~ .blog-row`
 		);
@@ -75,7 +75,7 @@ async function getContent(browser) {
 
 		let introBody = getTextFromParagraphs(introParagraphs);
 
-		contentCollection.push({
+    contentCollection.push({
 			sectionBody: introBody,
 			sectionTitle: introTitle,
 			sectionSubTitle
@@ -94,8 +94,8 @@ async function getContent(browser) {
 			}
 
 			let sectionBody = getTextFromParagraphs(currentParagraphs);
-			let sectionTitle = document.querySelector(`#toc-content .anchorable-toc:nth-of-type(${thisIndex})`).textContent;
-			let sectionLink = document.querySelector(`#toc-content .anchorable-toc:nth-of-type(${thisIndex}) a:nth-child(2)`).href;
+			let sectionTitle = document.querySelector(`#toc-content h2:nth-of-type(${thisIndex})`).textContent;
+			let sectionLink = document.querySelector(`#toc-content h2:nth-of-type(${thisIndex}) a:nth-child(2)`).href;
 
 			contentCollection.push({
 				sectionTitle,
