@@ -4,19 +4,16 @@ var getContent = require('../lib/get-content');
 var mocker = require('puppeteer-request-mocker');
 const puppeteer = require('puppeteer');
 
-
 describe('Create Goodbits Templates', function() {
   describe('getContent util', function() {
-    /* 	Usage: let content = await getContent(page, { botblogurl: 'someurl.com' }); */
     it('it extracts the intro section', async function() {
       let browser = await puppeteer.launch({
         devtools: false,
         defaultViewport: {
           width: 1600,
           height: 950
-      	}
+        }
       });
-
       const page = await browser.newPage();
       let content = await getContent(page, { botblogurl: 'http://localhost:8080/ember-times-example-post-999.html' });
 
@@ -26,14 +23,7 @@ describe('Create Goodbits Templates', function() {
     });
 
     it('it extracts a paragraph only section', async function() {
-      let browser = await puppeteer.launch({
-      	devtools: false,
-      	defaultViewport: {
-      		width: 1600,
-      		height: 950
-      	}
-      });
-
+      let browser = await puppeteer.launch();
       const page = await browser.newPage();
       let content = await getContent(page, { botblogurl: 'http://localhost:8080/ember-times-example-post-999.html' });
 
@@ -44,14 +34,7 @@ describe('Create Goodbits Templates', function() {
     });
 
     it('it extracts a section with quotes', async function() {
-      let browser = await puppeteer.launch({
-        devtools: false,
-        defaultViewport: {
-          width: 1600,
-          height: 950
-        }
-      });
-
+      let browser = await puppeteer.launch();
       const page = await browser.newPage();
       let content = await getContent(page, { botblogurl: 'http://localhost:8080/ember-times-example-post-999.html' });
 
@@ -59,14 +42,7 @@ describe('Create Goodbits Templates', function() {
     });
 
     it('it extracts a section with lists', async function() {
-      let browser = await puppeteer.launch({
-        devtools: false,
-        defaultViewport: {
-          width: 1600,
-          height: 950
-        }
-      });
-
+      let browser = await puppeteer.launch();
       const page = await browser.newPage();
       let content = await getContent(page, { botblogurl: 'http://localhost:8080/ember-times-example-post-999.html' });
 
@@ -75,14 +51,7 @@ describe('Create Goodbits Templates', function() {
     });
 
     it('it extracts all paragraphs', async function() {
-      let browser = await puppeteer.launch({
-        devtools: false,
-        defaultViewport: {
-          width: 1600,
-          height: 950
-        }
-      });
-
+      let browser = await puppeteer.launch();
       const page = await browser.newPage();
       let content = await getContent(page, { botblogurl: 'http://localhost:8080/ember-times-example-post-999.html' });
       assert.equal(content.length, 4);
