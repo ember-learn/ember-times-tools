@@ -32,7 +32,7 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 - review 👀 and feel free to improve the template at [Goodbits](https://goodbits.io/c/7430/emails) - this tool isn't perfect, but tries its best to help with the mundane copy-pasta work ✍️
   - If there are bullets, delete the line between regular text and bulleted text (should look like the pink box in the Goodbits editor)
   <insert image here> <maybe insert gif here>
-  - If there is ``` code text, manually delete in Goodbits editor and copy and paste from the blog webpage
+  - If there is ``` code text, manually delete in Goodbits editor and copy and paste from the blog webpage. Do double curlies manually: `{{` or `}}` must be written as `{{ opening_double_curly() }}` or `{{ closing_double_curly() }}`.
   <insert gif here> <maybe also insert image here>
   - If there are buttons, delete in text and change to Content > Button in Goodbits (add manually)
   - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
