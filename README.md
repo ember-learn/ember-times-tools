@@ -30,15 +30,10 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 ```
 - use the `--debug=true` for development and debugging 💛
 - review 👀 and feel free to improve the template at [Goodbits](https://goodbits.io/c/7430/emails) - this tool isn't perfect, but tries its best to help with the mundane copy-pasta work ✍️
-  - Drag "Social Links" to the bottom (below "#embertimes", above "Footer")
-  - Readers' Questions 
-      - Change "Display as" dropdown to "Article" 
-      - Delete broken image in text
-      - Add line break before "Submit your own", should be new paragraph
-      - Upload image https://emberjs.com/images/tomsters/officehours-42680347.png
-  - Replace any double curlies
-    - Opening double curlies `{{` should be `{{ opening_double_curly() }}` in Goodbits
-    - Closing double curlies `}}` should be `{{ closing_double_curly() }}` in Goodbits
+  - If there are bullets, delete the line between regular text and bulleted text (should look like the pink box in the Goodbits editor)
+  <insert image here> <maybe insert gif here>
+  - If there is ``` code text, manually delete in Goodbits editor and copy and paste from the blog webpage
+  <insert gif here> <maybe also insert image here>
   - If there are buttons, delete in text and change to Content > Button in Goodbits (add manually)
   - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
 - schedule the newsletter for 2pm PST (https://everytimezone.com/#2018-12-21,600,b8jj) and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
