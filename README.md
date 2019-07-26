@@ -37,5 +37,6 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
   - If there are buttons, delete in text and change to Content > Button in Goodbits (add manually)
   - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
 - Getting a 500 on goodbits.io? It may be because of a rogue double curly `{{` or `}}`, which must be written as `{{ opening_double_curly() }}` or `{{ closing_double_curly() }}`.
-- Goodbits creates "phantom" issues, so verify that the email subject matches the # of the issue we are sending
+- Goodbits creates "phantom" issues, so verify that the email subject matches the # of the issue we are sending.
+- Send a test email to yourself, and verify that emojis display correctly (there is a difference in Goodbits.io and your email, e.g. Gmail).
 - schedule the newsletter for 2pm PST (https://everytimezone.com/#2018-12-21,600,b8jj) and celebrate your support for The Ember Times this week.✨ Thank you! ❤️
