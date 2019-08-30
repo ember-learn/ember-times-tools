@@ -10,7 +10,7 @@ git clone git@github.com:jessica-jordan/emberjs-times-tools.git
 ``` 
 - `cd emberjs-times-tools`
 - `npm install`
-- set the `GOODBITS_USER_EMAIL` and `GOODBITS_USER_PASSWORD` env variables in e.g. your `~/.bashrc` (ping @jessica on [the Ember Community Slack](https://discordapp.com/invite/zT3asNS) for the credentials):
+- set the `GOODBITS_USER_EMAIL` and `GOODBITS_USER_PASSWORD` env variables in e.g. your `~/.bashrc` (ping @jessica on [the Ember Community Discord](https://discordapp.com/invite/zT3asNS) for the credentials):
 ```
 // .bashrc
 export GOODBITS_USER_EMAIL="goodbits-bot-email-address"
