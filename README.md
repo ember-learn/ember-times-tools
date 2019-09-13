@@ -40,7 +40,7 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 ## Troubleshooting Goodbits
 
 - If there are bullets, remove any blank line between regular non-bulleted text & first line of bulleted text
-- If there is ``` code block text, consider manually deleting the copied over code block in the Goodbits editor. Instead, you can try simply copying and pasting the ``` code block from the blog URL.
+- If there is code block text (three backticks), consider manually deleting the copied over code block in the Goodbits editor. Instead, you can try simply copying and pasting the code block from the blog URL.
 - Should be covered by `ember-times-tools` bot, but if not do double curlies manually: `{{` must be written as `{{ opening_double_curly() }}`, and `}}` as `{{ closing_double_curly() }}`.
 - No double curlies in Titles. Causes the word within double curlies to not appear at all.
 - If there are buttons, add manually. Delete the button in text and change to Content > Button in Goodbits.
