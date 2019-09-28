@@ -8,7 +8,7 @@ Helps you to get the Goodbits newsletter for [The Ember Times 🐹](https://twit
 ```
 git clone git@github.com:ember-learn/emberjs-times-tools.git
 ``` 
-- `cd emberjs-times-tools`
+- `cd ember-times-tools`
 - `nvm use` if you want to use the LTS version of Node, that we have tested 
 - `npm install`
 - set the `GOODBITS_USER_EMAIL` and `GOODBITS_USER_PASSWORD` env variables in e.g. your `~/.bashrc` (ping @jessica on [the Ember Community Discord](https://discordapp.com/invite/zT3asNS) for the credentials):
