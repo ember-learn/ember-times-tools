@@ -58,10 +58,12 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 
 ## dev.to howto
 
-* Copy raw from GitHub, delete top YAML portion
+* Copy raw from GitHub, delete top YAML portion. 
+* Delete READMORE
 * Delete any alex-ignore or markdownlint-ignore
 * Delete any italics classes such as `<span style="font-style: italic;"></span>`. Normal `<em>` or `*italicizeme*` markdown doesn't work in /ember-blog right now.
 * Double curlies `{{` in links will sometimes give you a liquid error. e.g. in this example, just deleted the double curlies```- [No Implicit This or {{foo}} to {{this.foo}} Codemod](https://github.com/ember-codemods/ember-no-implicit-this-codemod)```
+* Check for weird line breaking. We can fix this with stricter markdownlint but it was a bit cumbersome for blog writers!
 * Add canonical URL and series name (The Ember Times should come up)
 * Delete inline code and add body image for Readers' Questions image manually https://github.com/ember-learn/ember-website/blob/master/public/images/tomsters/officehours.png
 
