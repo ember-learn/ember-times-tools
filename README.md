@@ -39,8 +39,10 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 
 ## Troubleshooting Goodbits
 
-- If there are bullets, remove any blank line between regular non-bulleted text & first line of bulleted text
+- Many emojis appear fine on goodbits.com, but don't work when you send to email such as Gmail. Always send a test email and check the emojis there!
+- If there are bullets or numbered lists, remove any blank line between regular non-bulleted text & first line of bulleted text
 - If there is code block text (three backticks), consider manually deleting the copied over code block in the Goodbits editor. Instead, you can try simply copying and pasting the code block from the blog URL.
+- If there is quoted text `> quote here`, remove the line on the left hand side, convert to plain text, and italicize in Goodbits WYSIWIG instead. Quotes appear to look fine on goodbits.com, but they just looks strangely indented.
 - Should be covered by `ember-times-tools` bot, but if not do double curlies manually: `{{` must be written as `{{ opening_double_curly() }}`, and `}}` as `{{ closing_double_curly() }}`.
 - No double curlies in Titles. Causes the word within double curlies to not appear at all.
 - If there are buttons, add manually. Delete the button in text and change to Content > Button in Goodbits.
