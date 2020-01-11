@@ -46,3 +46,24 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 - If there are buttons, add manually. Delete the button in text and change to Content > Button in Goodbits.
 - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
 - Getting a 500 on goodbits.io? It may be because of a rogue double curly `{{` or `}}`, which must be written as `{{ opening_double_curly() }}` or `{{ closing_double_curly() }}`.
+
+## Twitter howto
+
+* Post tweet on Tweetdeck to post on Monday (second day of #engagement)
+* Set $natural reminder on Discord, for example: 
+
+```$natural on December 23th at 2:00pm send post tweet 2 news & announce @Alon (if you're avail!) :newspaper2: to #support-ember-times```
+* Use one emoji for each line item as a bullet point
+* Try to @ or hashtag when appropriate
+
+## dev.to howto
+
+* Copy raw from GitHub, delete top YAML portion. 
+* Delete READMORE
+* Delete any alex-ignore or markdownlint-ignore
+* Delete any italics classes such as `<span style="font-style: italic;"></span>`. Normal `<em>` or `*italicizeme*` markdown doesn't work in /ember-blog right now.
+* Double curlies `{{` in links will sometimes give you a liquid error. e.g. in this example, just deleted the double curlies```- [No Implicit This or {{foo}} to {{this.foo}} Codemod](https://github.com/ember-codemods/ember-no-implicit-this-codemod)```
+* Check for weird line breaking. We can fix this with stricter markdownlint but it was a bit cumbersome for blog writers!
+* Add canonical URL and series name (The Ember Times should come up)
+* Delete inline code and add body image for Readers' Questions image manually https://github.com/ember-learn/ember-website/blob/master/public/images/tomsters/officehours.png
+
