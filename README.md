@@ -48,6 +48,7 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 - If there are buttons, add manually. Delete the button in text and change to Content > Button in Goodbits.
 - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
 - Getting a 500 on goodbits.io? It may be because of a rogue double curly `{{` or `}}`, which must be written as `{{ opening_double_curly() }}` or `{{ closing_double_curly() }}`.
+- To add a gif, manually add an image instead of the typical "title and text" article, then upload the gif. Can link to the gif's URL on the blog e.g. https://blog.emberjs.com/images/blog/2020-03-13/ember_twiddle_preview-df7f432d.gif from The Ember Times Issue #139.
 
 ## Twitter howto
 
