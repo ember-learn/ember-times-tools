@@ -10,7 +10,6 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "boot:mocha": "nodemon --exec 'mocha -R min'",
     "boot:mocks": "http-server ./mocks &",
     "test": "http-server ./mocks & mocha \"./test/**/*.js\" --timeout 10000"
   },
@@ -20,8 +19,6 @@
   },
   "devDependencies": {
     "http-server": "^0.11.1",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.19.1",
-    "puppeteer-request-mocker": "^1.3.0"
+    "mocha": "^6.1.4"
   }
 }

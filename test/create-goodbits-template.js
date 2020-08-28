@@ -1,7 +1,6 @@
 var assert = require('assert');
 var script = require('../lib/goodbits.js');
 var getContent = require('../lib/get-content');
-var mocker = require('puppeteer-request-mocker');
 const puppeteer = require('puppeteer');
 
 describe('Create Goodbits Templates', function() {
