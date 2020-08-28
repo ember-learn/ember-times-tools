@@ -1,27 +1,27 @@
 {
+  "name": "goodbitsing",
+  "version": "1.0.0",
+  "description": "Helps you to get the Goodbits newsletter for [The Ember Times 🐹](https://twitter.com/embertimes) ready on a Friday afternoon 🌇 or night 🌙",
+  "main": "create-goodbits-template.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ember-learn/ember-times-tools.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "boot:mocha": "nodemon --exec 'mocha -R min'",
+    "boot:mocks": "http-server ./mocks &",
+    "test": "npm run boot:mocks && npm run boot:mocha"
+  },
   "dependencies": {
     "puppeteer": "^1.15.0",
     "yargs": "^12.0.5"
   },
-  "name": "goodbitsing",
-  "description": "Helps you to get the Goodbits newsletter for [The Ember Times 🐹](https://twitter.com/embertimes) ready on a Friday afternoon 🌇 or night 🌙",
-  "version": "1.0.0",
-  "main": "create-goodbits-template.js",
   "devDependencies": {
     "http-server": "^0.11.1",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.1",
     "puppeteer-request-mocker": "^1.3.0"
-  },
-  "scripts": {
-    "test": "npm run boot:mocks && npm run boot:mocha",
-    "boot:mocks": "http-server ./mocks &",
-    "boot:mocha": "nodemon --exec 'mocha -R min'"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jessica-jordan/emberjs-times-tools.git"
-  },
-  "author": "",
-  "license": "MIT"
+  }
 }
