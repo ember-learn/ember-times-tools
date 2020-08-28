@@ -12,7 +12,7 @@
   "scripts": {
     "boot:mocha": "nodemon --exec 'mocha -R min'",
     "boot:mocks": "http-server ./mocks &",
-    "test": "npm run boot:mocks && npm run boot:mocha"
+    "test": "yarn boot:mocks && yarn boot:mocha"
   },
   "dependencies": {
     "puppeteer": "^1.15.0",
