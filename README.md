@@ -44,7 +44,7 @@ node create-goodbits-template.js --botemail="$GOODBITS_USER_EMAIL" --botpassword
 - If there is code block text (three backticks), consider manually deleting the copied over code block in the Goodbits editor. Instead, you can try simply copying and pasting the code block from the blog URL.
 - If there is quoted text `> quote here`, remove the line on the left hand side, convert to plain text (I do this in Gmail Compose WYSIWIG), an pasted italicize in Goodbits WYSIWIG instead. Quotes *appear* to look fine on goodbits.com, but they just looks strangely indented when you send a test email.
 - Should be covered by `ember-times-tools` bot, but if not do double curlies manually: `{{` must be written as `{{ opening_double_curly() }}`, and `}}` as `{{ closing_double_curly() }}`.
-- No double curlies in Titles. Causes the word within double curlies to not appear at all.
+- No double curlies `{{` in Titles. Causes the word within double curlies to not appear at all, or sometimes causes a 500 error.
 - If there are buttons, add manually. Delete the button in text and change to Content > Button in Goodbits.
 - If there are images, e.g. contributor interview images, change "Display as" dropdown to "Article" in Goodbits and manually upload the image 
 - Getting a 500 on goodbits.io? It may be because of a rogue double curly `{{` or `}}`, which must be written as `{{ opening_double_curly() }}` or `{{ closing_double_curly() }}`.
